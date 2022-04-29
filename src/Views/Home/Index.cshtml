@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+@model CAN_Project.ControllerModels.HomeControllerModel
+
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var nodeValue = [];
+            var a;
+            $('#textbox').click(function () {
+                $('#textboxes').empty();
+                a = document.getElementById("number").value;
+                document.getElementById("textboxes").innerHTML += "<h5> Add messages to be sent below:</h5>";
+                for (i = 0; i < a; i++) {
+                    //var textbox = document.createElement("textarea");
+                    var ch = String.fromCharCode(i + 65);
+                    document.getElementById("textboxes").innerHTML += "<br /><br /> <b>Node " + ch + "<br /><br />";
+                    document.getElementById("textboxes").innerHTML += `<input type="text" size="35" id="textboxinput` + i + `">`;
+                }
+            });
+            $('#myFunction').click(function () {
+                for (i = 0; i < a; i++)
+                {
+                    var r = $("#textboxinput" + i).val();
+                    nodeValue.push(r);
+                }
+                $.ajax(
+                    {
+                        type: "POST", //HTTP POST Method
+                        url: "Home/Result", // Controller/View
+                        data: { //Passing data
+                            nodeValue: nodeValue
+                        },
+                        success: function (data) {
+                            var x = document.getElementById("myDIV");
+                            x.innerHTML = "<b>Message on BUS:  " + data + "</b>";
+                        }
+                    }
+                );
+            });
+        });
+    </script>
+
+    <div class="text-center">
+        <h1 class="display-4">CAN BUS</h1>
+        <p>
+            Simulator based on CAN Protocol
+        </p>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <div class="col-md-8">
+        <div class="row">
+            <div class="col-md-4">
+                <h5> Number of Nodes:</h5>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-2">
+                <input type="number" name="" id="number" class="form-control" style="width:100px" value="3">
+            </div>
+            <div class="col-md-2">
+                <input type="button" value="Enter Data" id="textbox" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <br />
+                <br />
+                <h5> Message frame:</h5>
+                <br />
+                <img src="~/Images/Standard_frame_can.png">
+            </div>
+        </div>
+
+        <br />
+        <div id="textboxes">
+        </div>
+        <br />
+        <p><button id="myFunction">Start Simulation</button></p>
+        <div id="myDIV"></div>
+    </div>
+</body>
+
+
+</html>
